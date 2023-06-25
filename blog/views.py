@@ -49,38 +49,30 @@ class UserSubjectUploadsView(generics.ListAPIView):
     def get_queryset(self):
         user_id = self.kwargs['user_id']
         subject_id = self.kwargs['subject_id']
-        # 특정 User의 해당 Subject의 Upload_Post들 가져오기
-        posts = Post.objects.filter(uploader__id=user_id, subject__id=subject_id)
-        return posts.values('id', 'name')
+        # 요청받은 User와 입력받은 Subject에 해당하는 모든 Uploaded_posts를 반환
+        return User.objects.get(id=user_id).uploaded_posts.filter(subject__id=subject_id)
 
 
-# User와 subject에 해당하는 모든 downloaded_posts의 ID와 이름을 보여준다.
+
+# User와 subject에 해당하는 모든 downloaded_posts를 보여준다.
 class UserSubjectDownloadsView(generics.ListAPIView):
     serializer_class = PostSerializer
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
         subject_id = self.kwargs['subject_id']
-        # 특정 User의 해당 Subject의 download_Post들 Show
-        return Post.objects.filter(downloaders__id=user_id, subject__id=subject_id)
+        # User와 Subject에 해당하는 모든 downloaded_posts를 반환
+        return User.objects.get(id=user_id).downloaded_posts.filter(subject__id=subject_id)
 
-# subject에 해당하는 모든 posts들의 ID와 이름들만을 보여준다.
+
+# subject에 해당하는 모든 posts들을 보여준다.
 class SubjectPostsView(generics.ListAPIView):
     serializer_class = PostSerializer
 
     def get_queryset(self):
         subject_id = self.kwargs['subject_id']
-        posts = Post.objects.filter(subject__id=subject_id)
-        post_data = [{'id': post.id, 'name': post.name} for post in posts]  # Extracting the IDs and names of the posts
-        return post_data
+        # 특정 과목에 해당하는 모든 자료들을 show
+        return Post.objects.filter(subject__id=subject_id)
 
 
 
-#입력받은 Post의 ID에 해당하는 Post의 모든 정보들을 보여준다.
-class PostDetailView(generics.RetrieveAPIView):
-    serializer_class = PostSerializer
-
-    def get_queryset(self):
-        post_id = self.kwargs['post_id']
-        # Retrieve the specific post based on the received post ID
-        return Post.objects.filter(id=post_id)
