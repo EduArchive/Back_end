@@ -17,12 +17,15 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+from django.db import models
 
 class User(models.Model):
     name = models.CharField(max_length=30)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     subjects = models.ManyToManyField(Subject)
     uploaded_posts = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True, blank=True, related_name='uploader')
     downloaded_posts = models.ManyToManyField(Post, related_name='downloaders')
 
     def __str__(self):
         return self.name
+
