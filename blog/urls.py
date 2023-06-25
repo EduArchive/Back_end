@@ -1,18 +1,13 @@
 from django.urls import path
-from .views import *
+from .views import UserCreateAPIView, UserListCreateView, UserDetailView, \
+    SubjectListCreateView, SubjectDetailView, PostListCreateView, PostDetailView
 
 urlpatterns = [
-    # user urls
-    path('create-user/', UserCreateAPIView.as_view()),
-    path('list-user/', UserListAPIView.as_view()),
-    path('retrieve-user/<int:pk>/', UserRetrieveAPIView.as_view()),
-    path('update-user/<int:pk>/', UserUpdateAPIView.as_view()),
-    path('destroy-user/<int:pk>/', UserDestroyAPIView.as_view()),
-
-    # blog urls
-    # path('create-blog/',),
-    # path('list-blog/',),
-    # path('retrieve-blog/',),
-    # path('update-blog/',),
-    # path('destroy-blog/',),
+    path('users/', UserListCreateView.as_view(), name='user-list-create'),
+    path('users/<int:pk>/', UserDetailView.as_view(), name='user-detail'),
+    path('subjects/', SubjectListCreateView.as_view(), name='subject-list-create'),
+    path('subjects/<int:pk>/', SubjectDetailView.as_view(), name='subject-detail'),
+    path('posts/', PostListCreateView.as_view(), name='post-list-create'),
+    path('posts/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
+    path('users/create/', UserCreateAPIView.as_view(), name='user-create'),
 ]

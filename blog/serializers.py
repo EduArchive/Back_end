@@ -7,18 +7,14 @@ class SubjectSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PostSerializer(serializers.ModelSerializer):
-    subject = SubjectSerializer()
-    uploader = serializers.StringRelatedField()
-    downloaders = serializers.StringRelatedField(many=True)
-
     class Meta:
         model = Post
         fields = '__all__'
 
 class UserSerializer(serializers.ModelSerializer):
-    subjects = SubjectSerializer(many=True)
-    uploaded_posts = PostSerializer()
-    downloaded_posts = PostSerializer(many=True)
+    subjects = SubjectSerializer(many=True, read_only=True)
+    uploaded_posts = PostSerializer(many=True, read_only=True)
+    downloaded_posts = PostSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
