@@ -31,16 +31,15 @@ class PostDownloadAPIView(generics.CreateAPIView):
         user = self.request.user
         user.downloaded_posts.add(post)
 
-# User의 정보를 보여주는데 Uplaoded, Downloaded는 제외
+# 입력받은 User ID에 해당하는 User의 uploaded_post와 downloaded_post의 정보를 제외하고 보여준다
 class UserDetailView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['exclude_fields'] = ['uploaded_posts', 'downloaded_posts']
-        # 요청받은 User의 정보 중 Uploaded_post와 downloaded_post를 제외한 정보들을 show
-        return context
+    def get_object(self):
+        user_id = self.kwargs['user_id']
+        return User.objects.filter(id=user_id).exclude(uploaded_posts__isnull=False, downloaded_posts__isnull=False).first()
+
 
 # User와 subject에 해당하는 모든 Uploaded_posts의 ID와 name를 return한다.
 class UserSubjectUploadsView(generics.ListAPIView):
